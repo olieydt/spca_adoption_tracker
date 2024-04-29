@@ -5,6 +5,7 @@ import { getAuth, Auth, UserRecord } from "firebase-admin/auth"
 import { Firestore, getFirestore } from "firebase-admin/firestore"
 import serviceAccount from '../../keys/spca-adoption-notify-firebase-adminsdk-n3mam-d4d9f2a1f8.json'
 import { Animal, User } from 'app'
+import { generateRandomStr } from '../constants'
 
 //https://firebase.google.com/docs/auth/admin/errors
 
@@ -46,10 +47,15 @@ class Firebase {
             .where('email', '==', user.email)
             .limit(1)
             .get()
+        let userId: string
         if (docs.length < 1) {
-            return this.db.collection(Collections.Users).add(user)
+            userId = generateRandomStr()
+            await this.db.collection(Collections.Users).doc(userId).set(user)
+        } else {
+            userId = docs[0].id
+            await docs[0].ref.update(user)
         }
-        return docs[0].ref.update(user)
+        return userId
     }
 
     unsubscribeUser = async (userId: string) => {

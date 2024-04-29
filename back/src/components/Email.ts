@@ -1,6 +1,7 @@
 import Mailjet from 'node-mailjet'
 import { MAILJET_API_KEY, MAILJET_SECRET_KEY } from '../../keys/mailjet'
 import signupEmail from '../assets/signup_email/signup'
+import notificationEmail from '../assets/notifications_email/notifications'
 
 class Email {
     static instance: Email
@@ -23,7 +24,7 @@ class Email {
     }
 
     async sendNotifyEmail(customerName: string, customerEmail: string, animalListHtml: string[], unsubscribeLink: string) {
-        return this.sendEmail(customerName, customerEmail, 'New animals found!', signupEmail(customerName, unsubscribeLink), `Welcome! You can unsubscribe here: ${unsubscribeLink}`)
+        return this.sendEmail(customerName, customerEmail, 'New animals found!', notificationEmail(customerName, animalListHtml, unsubscribeLink), `Only html emails are available`)
     }
 
     async sendEmail(customerName: string, customerEmail: string, subject: string, emailHtml: string, emailText: string) {

@@ -14,10 +14,14 @@ enum SEX {
     Female = 'female'
 }
 
-enum AnimalType {
+export enum AnimalType {
     Dog = 'dog',
     Cat = 'cat'
 }
+
+const unsubscribeSchema = Joi.object({
+    id: Joi.string().length(20).required()
+})
 
 const userSchema = Joi.object({
     name: Joi.string().required().min(3).max(100),
@@ -31,12 +35,27 @@ export type User = {
     animalTypeSubscriptions: AnimalType[]
 }
 
+enum AgeType {
+    Baby = 'baby',
+    Young = 'young',
+    Adult = 'adult',
+    Old = 'old'
+}
+
+const AgeTypeRecord: Record<string, AgeType> = {
+    'Âgé': AgeType.Old,
+    'Jeune': AgeType.Young,
+    'Adulte': AgeType.Adult,
+    'Bébé': AgeType.Baby
+}
+
 export type Animal = {
     type: AnimalType
     name: string
     url: string
-    ageType: string
-    sex: SEX
+    ageType: AgeType
+    sex: SEX,
+    imageUrl: string
 }
 
 const getSpcaPageUrl = (animalType: AnimalType, pageNumber: number) => {
@@ -60,7 +79,8 @@ const getAnimalsForType = async (animalType: AnimalType) => {
         Array.prototype.push.apply(animals, dogsHtmlList.reduce((acc, dogHtmlElement) => {
             const nameHtml = dogHtmlElement.querySelector('.card--title')
             const descriptionHtml = dogHtmlElement.querySelector('.pet--infos')
-            if (!nameHtml || !descriptionHtml) {
+            const imageHtml = dogHtmlElement.querySelector('img')
+            if (!nameHtml || !descriptionHtml || !imageHtml) {
                 return acc
             }
             const { childNodes: [nameNode] } = nameHtml
@@ -68,11 +88,12 @@ const getAnimalsForType = async (animalType: AnimalType) => {
             if (!nameNode || !descriptionNode) {
                 return acc
             }
-            const [_, ageType, __, sex] = descriptionNode.text.trim().split(' ● ')// Chien ● Jeune ● Mâle ● M
+            const [_, ageType, ___, sex] = descriptionNode.text.trim().split(' ● ')// Chien ● Jeune ● Mâle ● M
             acc.push({
                 type: animalType,
                 name: nameNode.text.trim(),
-                ageType,
+                ageType: AgeTypeRecord[ageType],
+                imageUrl: imageHtml.getAttribute('src') || '',
                 url: dogHtmlElement.attrs.href,
                 sex: sex === 'M' ? SEX.Male : SEX.Female
             })
@@ -112,18 +133,20 @@ export const handleSubscribe = async (req: Request, res: Response) => {
         res.status(422).send()
         return
     }
-    await firebase.subscribeUser(validationResult.value as User)
+    const user = validationResult.value as User
+    const userId = await firebase.subscribeUser(user)
+    await email.sendSubscribeEmail(user.name, user.email, getUnsubscribeLink(userId))
     res.send({})
 }
 
 export const handleUnsubscribe = async (req: Request, res: Response) => {
-    const { id } = req.query
-    if (typeof id !== 'string') {
+    const validationResult = unsubscribeSchema.validate(req.query)
+    if (validationResult.error) {
         res.status(422).send()
         return
     }
     try {
-        await firebase.unsubscribeUser(id)
+        await firebase.unsubscribeUser(validationResult.value.id)
     } catch (error) {
         console.error(error)
         res.status(404).send()
