@@ -9,6 +9,8 @@ import { generateRandomStr } from '../constants'
 
 //https://firebase.google.com/docs/auth/admin/errors
 
+const FIREBASE_USER_ID_LENGTH = 20
+
 enum Collections {
     Animals = 'ANIMALS',
     Users = 'USERS'
@@ -45,11 +47,12 @@ class Firebase {
     subscribeUser = async (user: User) => {
         const { docs } = await this.db.collection(Collections.Users)
             .where('email', '==', user.email)
+            .select()
             .limit(1)
             .get()
         let userId: string
         if (docs.length < 1) {
-            userId = generateRandomStr()
+            userId = generateRandomStr().slice(FIREBASE_USER_ID_LENGTH)
             await this.db.collection(Collections.Users).doc(userId).set(user)
         } else {
             userId = docs[0].id
@@ -77,7 +80,7 @@ class Firebase {
             .where('available', '==', true)
             .select('url')
             .get()
-        const deletedIndexes = new Set<number>()
+        const existingIndexes = new Set<number>()
         for (const doc of docs) {
             const index = animals.findIndex(({ url }) => url === doc.data().url)
             if (index === -1) {
@@ -85,19 +88,19 @@ class Firebase {
                     'available': false
                 })
             } else {
-                deletedIndexes.add(index)
+                existingIndexes.add(index)
             }
         }
         const newAnimalIndexes = []
         for (let i = 0; i < animals.length; i++) {
-            if (deletedIndexes.has(i)) continue
+            if (existingIndexes.has(i)) continue
             newAnimalIndexes.push(i)
             this.db.collection(Collections.Animals).add({
                 ...animals[i],
                 available: true
             })
         }
-        return { newAnimalIndexes, removedAnimalsCount: deletedIndexes.size }
+        return { newAnimalIndexes, removedAnimalsCount: docs.length - existingIndexes.size }
     }
 }
 

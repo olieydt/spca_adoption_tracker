@@ -1,4 +1,7 @@
-export default (name: string, unsubscribeLink: string) => `
+import { AnimalType } from "../../app"
+import { FRONTEND_URL, upperCaseFirst } from "../../constants"
+
+export default (name: string, animalTypeSubscriptions: AnimalType[], unsubscribeLink: string) => `
 <!DOCTYPE html>
 
 <html lang="en-GB" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:v="urn:schemas-microsoft-com:vml">
@@ -159,7 +162,7 @@ export default (name: string, unsubscribeLink: string) => `
 																			style="outline:none" tabindex="-1"
 																			target="_blank"><img alt="company logo"
 																				height="auto"
-																				src="images/Screenshot_2024-04-29_at_10.50.31AM.png"
+																				src="${FRONTEND_URL}images/logo.png"
 																				style="display: block; height: auto; border: 0; width: 100%;"
 																				title="company logo" width="600" /></a>
 																	</div>
@@ -203,7 +206,7 @@ export default (name: string, unsubscribeLink: string) => `
 																			style="outline:none" tabindex="-1"
 																			target="_blank"><img alt="hero image"
 																				height="auto"
-																				src="images/charlesdeluvio-Mv9hjnEUHR4-unsplash_1.png"
+																				src="${FRONTEND_URL}images/charlesdeluvio-Mv9hjnEUHR4-unsplash_1.png"
 																				style="display: block; height: auto; border: 0; width: 100%;"
 																				title="hero image" width="330" /></a>
 																	</div>
@@ -256,8 +259,7 @@ export default (name: string, unsubscribeLink: string) => `
 																style="padding-bottom:5px;padding-left:40px;padding-right:40px;padding-top:15px;">
 																<div
 																	style="color:#1e2e2a;direction:ltr;font-family:'Ubuntu', Tahoma, Verdana, Segoe, sans-serif;font-size:18px;font-weight:300;letter-spacing:1px;line-height:120%;text-align:center;mso-line-height-alt:21.599999999999998px;">
-																	<p style="margin: 0;">you're now subscribed to
-																		animal adoption notifications for SPCA Montreal, we can't wait to
+																	<p style="margin: 0;">you're now subscribed to SPCA adoption updates for <strong>${animalTypeSubscriptions.map(upperCaseFirst).join(' & ')}</strong>, we can't wait to
 																		help you find your companion.</p>
 																</div>
 															</td>
@@ -295,7 +297,7 @@ export default (name: string, unsubscribeLink: string) => `
 																<div align="center" class="alignment"
 																	style="line-height:10px">
 																	<div style="max-width: 180px;"><img height="auto"
-																			src="images/Divider_1.png"
+																			src="${FRONTEND_URL}images/Divider_1.png"
 																			style="display: block; height: auto; border: 0; width: 100%;"
 																			width="180" /></div>
 																</div>
@@ -341,7 +343,7 @@ export default (name: string, unsubscribeLink: string) => `
 																					href="https://www.linkedin.com/in/oli-stalk-me/"
 																					target="_blank"><img alt="LinkedIn"
 																						height="auto"
-																						src="images/linkedin2x.png"
+																						src="${FRONTEND_URL}images/linkedin2x.png"
 																						style="display: block; height: auto; border: 0;"
 																						title="LinkedIn"
 																						width="32" /></a></td>

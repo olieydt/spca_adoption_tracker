@@ -116,7 +116,7 @@ const getUnsubscribeLink = (userId: string) => `${FRONTEND_URL}unsubscribe?id=${
 const sendNotifications = async (animals: Animal[]) => {
     const subscribedUsers = await firebase.getSubscribedUsers()
     const results = await Promise.allSettled(subscribedUsers.map(({ docId, user }) => {
-        return email.sendNotifyEmail(user.name, user.email, [], getUnsubscribeLink(docId))
+        return email.sendNotifyEmail(user.name, user.email, animals.filter(({ type }) => user.animalTypeSubscriptions.includes(type)), getUnsubscribeLink(docId))
     }))
     results.forEach((result, i) => {
         const { status } = result
@@ -135,7 +135,7 @@ export const handleSubscribe = async (req: Request, res: Response) => {
     }
     const user = validationResult.value as User
     const userId = await firebase.subscribeUser(user)
-    await email.sendSubscribeEmail(user.name, user.email, getUnsubscribeLink(userId))
+    await email.sendSubscribeEmail(user.name, user.email, user.animalTypeSubscriptions, getUnsubscribeLink(userId))
     res.send({})
 }
 
@@ -160,6 +160,9 @@ export const handleScrapeJob = async (res: Response) => {
     const { newAnimalIndexes, removedAnimalsCount } = await firebase.syncAnimals(animals)
     console.log(`synced animals, ${newAnimalIndexes.length} new and ${removedAnimalsCount} removed`)
     // send emails to subscribed clients
-    await sendNotifications(newAnimalIndexes.map(i => animals[i]))
+    if (newAnimalIndexes.length > 0) {
+        await sendNotifications(newAnimalIndexes.map(i => animals[i]))
+        console.log('Sent notifications')
+    }
     res.send({})
 }

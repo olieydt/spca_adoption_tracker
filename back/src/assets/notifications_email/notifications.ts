@@ -1,3 +1,5 @@
+import { FRONTEND_URL } from "../../constants"
+
 export default (customerName: string, animalListHtml: string[], unsubscribeLink: string) => `<!DOCTYPE html>
 
 <html lang="en" xmlns:o="urn:schemas-microsoft-com:office:office" xmlns:v="urn:schemas-microsoft-com:vml">
@@ -124,7 +126,7 @@ export default (customerName: string, animalListHtml: string[], unsubscribeLink:
 																	style="line-height:10px">
 																	<div style="max-width: 151.667px;"><img
 																			alt="I'm an image" height="auto"
-																			src="images/charlesdeluvio-Mv9hjnEUHR4-unsplash_1.png"
+																			src="${FRONTEND_URL}images/charlesdeluvio-Mv9hjnEUHR4-unsplash_1.png"
 																			style="display: block; height: auto; border: 0; width: 100%;"
 																			title="I'm an image" width="151.667" />
 																	</div>
@@ -146,7 +148,7 @@ export default (customerName: string, animalListHtml: string[], unsubscribeLink:
 																	style="line-height:10px">
 																	<div style="max-width: 413.333px;"><img
 																			height="auto"
-																			src="images/Screenshot_2024-04-29_at_10.50.31AM.png"
+																			src="${FRONTEND_URL}images/logo.png"
 																			style="display: block; height: auto; border: 0; width: 100%;"
 																			width="413.333" /></div>
 																</div>
@@ -188,7 +190,7 @@ export default (customerName: string, animalListHtml: string[], unsubscribeLink:
 																<h2
 																	style="margin: 0; color: #086064; direction: ltr; font-family: 'Oxygen', 'Trebuchet MS', 'Lucida Grande', 'Lucida Sans Unicode', 'Lucida Sans', Tahoma, sans-serif; font-size: 36px; font-weight: 700; letter-spacing: normal; line-height: 120%; text-align: left; margin-top: 0; margin-bottom: 0; mso-line-height-alt: 43.199999999999996px;">
 																	<span class="tinyMce-placeholder">Let's find you a
-																		homie ${customerName}.</span>
+																		homie, ${customerName}.</span>
 																</h2>
 															</td>
 														</tr>
@@ -251,7 +253,7 @@ export default (customerName: string, animalListHtml: string[], unsubscribeLink:
 																					href="https://www.linkedin.com/in/oli-stalk-me/"
 																					target="_blank"><img alt="Linkedin"
 																						height="auto"
-																						src="images/linkedin2x.png"
+																						src="${FRONTEND_URL}images/linkedin2x.png"
 																						style="display: block; height: auto; border: 0;"
 																						title="linkedin"
 																						width="32" /></a></td>

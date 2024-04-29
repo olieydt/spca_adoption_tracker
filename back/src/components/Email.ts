@@ -1,7 +1,9 @@
 import Mailjet from 'node-mailjet'
 import { MAILJET_API_KEY, MAILJET_SECRET_KEY } from '../../keys/mailjet'
-import signupEmail from '../assets/signup_email/signup'
-import notificationEmail from '../assets/notifications_email/notifications'
+import getSignupEmail from '../assets/signup_email/signup'
+import getNotificationHtml from '../assets/notifications_email/notifications'
+import getNotificationRowHtml from '../assets/notifications_email/notificationRow'
+import { Animal, AnimalType } from '../app'
 
 class Email {
     static instance: Email
@@ -19,12 +21,12 @@ class Email {
         return Email.instance
     }
 
-    async sendSubscribeEmail(customerName: string, customerEmail: string, unsubscribeLink: string) {
-        return this.sendEmail(customerName, customerEmail, 'Subscribed to SPCA Montreal notifications', signupEmail(customerName, unsubscribeLink), `Welcome! You can unsubscribe here: ${unsubscribeLink}`)
+    async sendSubscribeEmail(customerName: string, customerEmail: string, animalTypeSubscriptions: AnimalType[], unsubscribeLink: string) {
+        return this.sendEmail(customerName, customerEmail, 'Subscribed to SPCA Montreal notifications', getSignupEmail(customerName, animalTypeSubscriptions, unsubscribeLink), `Welcome! You can unsubscribe here: ${unsubscribeLink}`)
     }
 
-    async sendNotifyEmail(customerName: string, customerEmail: string, animalListHtml: string[], unsubscribeLink: string) {
-        return this.sendEmail(customerName, customerEmail, 'New animals found!', notificationEmail(customerName, animalListHtml, unsubscribeLink), `Only html emails are available`)
+    async sendNotifyEmail(customerName: string, customerEmail: string, animals: Animal[], unsubscribeLink: string) {
+        return this.sendEmail(customerName, customerEmail, 'New animals found!', getNotificationHtml(customerName, animals.map(getNotificationRowHtml), unsubscribeLink), `Only html emails are available`)
     }
 
     async sendEmail(customerName: string, customerEmail: string, subject: string, emailHtml: string, emailText: string) {
@@ -35,7 +37,7 @@ class Email {
                     {
                         From: {
                             Email: 'no-reply@nofusstranscription.com',
-                            Name: "Animal Adoption Notification"
+                            Name: "FindYourCompanion.ca"
                         },
                         To: [
                             {

@@ -17,13 +17,11 @@ export const sleep = (time: number) => {
     return new Promise(resolve => setTimeout(resolve, time))
 }
 
+export const upperCaseFirst = (str: string) => str.charAt(0).toUpperCase() + str.slice(1)
+
 export const FRONTEND_URL = 'https://spca-adoption-notify.web.app/'
 
 
-export const generateRandomStr = (N = 20, length?: number) => {
-    const str = crypto.randomBytes(N).toString('hex')
-    if (length) {
-        return str.substring(0, length)
-    }
-    return str
+export const generateRandomStr = (N = 20) => {
+    return crypto.randomBytes(N).toString('hex')
 }
