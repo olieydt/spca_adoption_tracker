@@ -96,7 +96,7 @@ function App() {
               <div className={classes.textContainer}>
                 <span className={`${classes.text} ${classes.textFont}`}>
                   Subscribe below to be notified when new animals are up for adoption.
-                  We scan the SPCA Montreal adoption page for new arrivals and notify you by email. <br /><br /><br />
+                  We scan the SPCA Montreal adoption page for new arrivals and notify you by email. <br />** We are not related to the SPCA in any way and this service is run for free! ** <br /><br /><br />
                   <strong className={classes.textLarger}>Take the time you need to find the
                     right companion!</strong>
                 </span>
