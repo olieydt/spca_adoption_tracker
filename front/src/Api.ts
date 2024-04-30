@@ -36,7 +36,7 @@ class Api {
         if (method === METHODS.Post) {
             requestInit.body = JSON.stringify(body)
         }
-        const url = `${SERVER_HOST}${path}`
+        const url = `${SERVER_HOST}/${path}`
         let response: Response | undefined
         let count: number = 0
         while (count++ < retryCount) {

@@ -4,7 +4,10 @@ import { ThemeProvider } from "@mui/material/styles"
 import TextField from '@mui/material/TextField'
 import FormControlLabel from '@mui/material/FormControlLabel'
 import Checkbox from '@mui/material/Checkbox'
+import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import Typography from '@mui/material/Typography'
+import Modal from '@mui/material/Modal'
 import theme from "./theme"
 import logo from './assets/logo.png'
 import dog from './assets/dog_hold.png'
@@ -14,15 +17,14 @@ import Api, { METHODS } from "./Api"
 import { NAME_MAX_LENGTH, NAME_MIN_LENGTH, URL_PATHS } from "../../shared/constants"
 import { AnimalType, User } from '../../shared/types'
 
-type FormErrors = {
-  name?: string
-  email?: string
-}
-
 const basicEmailValidator = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 
 function App() {
   const { classes } = useStyles()
+  const [modalOpen, setModalOpen] = useState(false)
+  const handleCloseModal = () => setModalOpen(false)
+  const [modalTitle, setModalTitle] = useState('')
+  const [modalMessage, setModalMessage] = useState('')
   const [dogChecked, setDogChecked] = useState(false)
   const [catChecked, setCatChecked] = useState(false)
   const [nameFieldHelper, setNameFieldHelper] = useState('')
@@ -66,7 +68,14 @@ function App() {
         email: emailValue,
         animalTypeSubscriptions
       }
+    }).then(() => {
+      setModalTitle('Success!')
+      setModalMessage('You have successfully subscribed! Check your mail box for confirmation.')
+      setModalOpen(true)
     }).catch((error: Error) => {
+      setModalTitle('Error!')
+      setModalMessage('There was a problem. Check back later or try again.')
+      setModalOpen(true)
       console.error(error)
     })
   }, [nameValue, emailValue, dogChecked, catChecked])
@@ -118,6 +127,21 @@ function App() {
               <a href="https://www.linkedin.com/in/oli-stalk-me/"><img className={classes.footerImg} width="35" src={linkedin} alt="linkedin" /></a>
             </p>
           </footer>
+          <Modal
+            open={modalOpen}
+            onClose={handleCloseModal}
+            aria-labelledby="modal-modal-title"
+            aria-describedby="modal-modal-description"
+          >
+            <Box className={classes.modalContainer}>
+              <Typography className={`${classes.modalTitle} ${classes.textFont}`} variant="h6" component="h2">
+                {modalTitle}
+              </Typography>
+              <Typography className={`${classes.modalMessage} ${classes.textFont}`}>
+                {modalMessage}
+              </Typography>
+            </Box>
+          </Modal>
         </div>
       </ThemeProvider>
     </>
@@ -126,6 +150,23 @@ function App() {
 
 const useStyles = tss
   .create(({ theme }) => ({
+    modalTitle: {
+      fontSize: '2em',
+      marginLeft: '10px'
+    },
+    modalMessage: {
+      fontSize: '1.2em',
+      marginLeft: '10px'
+    },
+    modalContainer: {
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+      width: 400,
+      backgroundColor: 'white',
+      border: '2px solid #000'
+    },
     animalTypeTitle: {
       marginRight: '10px'
     },

@@ -26,7 +26,7 @@ const unsubscribeSchema = Joi.object({
 const userSchema = Joi.object({
     name: Joi.string().required().min(NAME_MIN_LENGTH).max(NAME_MAX_LENGTH),
     email: Joi.string().email().required(),
-    animalTypeSubscriptions: Joi.array<AnimalType>().max(ANIMAL_TYPE_SUBSCRIPTIONS_MAX).unique().required()
+    animalTypeSubscriptions: Joi.array<AnimalType>().min(1).max(ANIMAL_TYPE_SUBSCRIPTIONS_MAX).unique().required()
 })
 
 
@@ -86,7 +86,7 @@ const getAllAnimals = async () => {
     return animals
 }
 
-const getUnsubscribeLink = (userId: string) => `${FRONTEND_HOST}unsubscribe?id=${userId}`
+const getUnsubscribeLink = (userId: string) => `${FRONTEND_HOST}/unsubscribe?id=${userId}`
 
 const sendNotifications = async (animals: Animal[]) => {
     const subscribedUsers = await firebase.getSubscribedUsers()
@@ -103,6 +103,7 @@ const sendNotifications = async (animals: Animal[]) => {
 
 export const handleSubscribe = async (req: Request, res: Response) => {
     const { body } = req
+    debugger
     const validationResult = userSchema.validate(body)
     if (validationResult.error) {
         res.status(422).send()

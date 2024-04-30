@@ -126,7 +126,7 @@ export default (customerName: string, animalListHtml: string[], unsubscribeLink:
 																	style="line-height:10px">
 																	<div style="max-width: 151.667px;"><img
 																			alt="I'm an image" height="auto"
-																			src="${FRONTEND_HOST}images/charlesdeluvio-Mv9hjnEUHR4-unsplash_1.png"
+																			src="${FRONTEND_HOST}/images/charlesdeluvio-Mv9hjnEUHR4-unsplash_1.png"
 																			style="display: block; height: auto; border: 0; width: 100%;"
 																			title="I'm an image" width="151.667" />
 																	</div>
@@ -148,7 +148,7 @@ export default (customerName: string, animalListHtml: string[], unsubscribeLink:
 																	style="line-height:10px">
 																	<div style="max-width: 413.333px;"><img
 																			height="auto"
-																			src="${FRONTEND_HOST}images/logo.png"
+																			src="${FRONTEND_HOST}/images/logo.png"
 																			style="display: block; height: auto; border: 0; width: 100%;"
 																			width="413.333" /></div>
 																</div>
@@ -253,7 +253,7 @@ export default (customerName: string, animalListHtml: string[], unsubscribeLink:
 																					href="https://www.linkedin.com/in/oli-stalk-me/"
 																					target="_blank"><img alt="Linkedin"
 																						height="auto"
-																						src="${FRONTEND_HOST}images/linkedin2x.png"
+																						src="${FRONTEND_HOST}/images/linkedin2x.png"
 																						style="display: block; height: auto; border: 0;"
 																						title="linkedin"
 																						width="32" /></a></td>

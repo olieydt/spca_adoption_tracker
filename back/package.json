@@ -2,10 +2,10 @@
     "name": "spca-alarm",
     "version": "1.0.0",
     "description": "",
-    "main": "src/index.js",
+    "main": "back/src/index.js",
     "scripts": {
-        "debug": "tsc && cd dist/ && node --inspect ../node_modules/.bin/functions-framework --target=entry",
-        "startLocal": "tsc && cd dist/src && npx functions-framework --target=entry --signature-type=http",
+        "debug": "npm run b && cd dist/back/src && node --inspect ../../../node_modules/.bin/functions-framework --target=entry",
+        "startLocal": "npm run b && cd dist/back/src && npx functions-framework --target=entry --signature-type=http",
         "start": "npx functions-framework --target=entry --signature-type=http",
         "b": "tsc && cp package.json dist/package.json && cp package-lock.json dist/package-lock.json",
         "deploy": "npm run b && ./deploy.sh",

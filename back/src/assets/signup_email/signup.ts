@@ -163,7 +163,7 @@ export default (name: string, animalTypeSubscriptions: AnimalType[], unsubscribe
 																			style="outline:none" tabindex="-1"
 																			target="_blank"><img alt="company logo"
 																				height="auto"
-																				src="${FRONTEND_HOST}images/logo.png"
+																				src="${FRONTEND_HOST}/images/logo.png"
 																				style="display: block; height: auto; border: 0; width: 100%;"
 																				title="company logo" width="600" /></a>
 																	</div>
@@ -207,7 +207,7 @@ export default (name: string, animalTypeSubscriptions: AnimalType[], unsubscribe
 																			style="outline:none" tabindex="-1"
 																			target="_blank"><img alt="hero image"
 																				height="auto"
-																				src="${FRONTEND_HOST}images/charlesdeluvio-Mv9hjnEUHR4-unsplash_1.png"
+																				src="${FRONTEND_HOST}/images/charlesdeluvio-Mv9hjnEUHR4-unsplash_1.png"
 																				style="display: block; height: auto; border: 0; width: 100%;"
 																				title="hero image" width="330" /></a>
 																	</div>
@@ -298,7 +298,7 @@ export default (name: string, animalTypeSubscriptions: AnimalType[], unsubscribe
 																<div align="center" class="alignment"
 																	style="line-height:10px">
 																	<div style="max-width: 180px;"><img height="auto"
-																			src="${FRONTEND_HOST}images/Divider_1.png"
+																			src="${FRONTEND_HOST}/images/Divider_1.png"
 																			style="display: block; height: auto; border: 0; width: 100%;"
 																			width="180" /></div>
 																</div>
@@ -344,7 +344,7 @@ export default (name: string, animalTypeSubscriptions: AnimalType[], unsubscribe
 																					href="https://www.linkedin.com/in/oli-stalk-me/"
 																					target="_blank"><img alt="LinkedIn"
 																						height="auto"
-																						src="${FRONTEND_HOST}images/linkedin2x.png"
+																						src="${FRONTEND_HOST}/images/linkedin2x.png"
 																						style="display: block; height: auto; border: 0;"
 																						title="LinkedIn"
 																						width="32" /></a></td>
