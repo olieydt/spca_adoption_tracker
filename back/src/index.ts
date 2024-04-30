@@ -45,7 +45,6 @@ http('entry', async (req, res) => {
     const reqId = req.header('trace-id') || generateRandomStr().slice(10)
     asyncLocalStorage.run(reqId, async () => {
         try {
-            debugger
             const shouldHandle = handleCors(req, res)
             if (!shouldHandle) {
                 return
