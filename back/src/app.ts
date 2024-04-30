@@ -73,6 +73,9 @@ const getAnimalsForType = async (animalType: AnimalType) => {
         if (status === 404) {
             break
         }
+        if (status !== 200) {
+            throw new Error(`Could not sync site, got status ${status}`)
+        }
         const htmlText = await response.text()
         const root = parse(htmlText)
         const dogsHtmlList = root.querySelectorAll('.card--link')
@@ -145,8 +148,10 @@ export const handleUnsubscribe = async (req: Request, res: Response) => {
         res.status(422).send()
         return
     }
+    const { value: { id: userId } } = validationResult
     try {
-        await firebase.unsubscribeUser(validationResult.value.id)
+        await firebase.unsubscribeUser(userId)
+        res.send({})
     } catch (error) {
         console.error(error)
         res.status(404).send()

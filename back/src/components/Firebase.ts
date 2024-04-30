@@ -1,6 +1,6 @@
 import firebaseAdmin from 'firebase-admin'
 import { initializeApp, App } from 'firebase-admin/app'
-import { DocumentData, FieldPath, Query } from 'firebase-admin/firestore'
+import { DocumentData, DocumentReference, FieldPath, Query } from 'firebase-admin/firestore'
 import { getAuth, Auth, UserRecord } from "firebase-admin/auth"
 import { Firestore, getFirestore } from "firebase-admin/firestore"
 import serviceAccount from '../../keys/spca-adoption-notify-firebase-adminsdk-n3mam-d4d9f2a1f8.json'
@@ -75,32 +75,53 @@ class Firebase {
         return docs.map(doc => ({ docId: doc.id, user: doc.data() as User }))
     }
 
-    syncAnimals = async (animals: Animal[]) => {
+    isAnimalDiff = (oldAnimal: Animal, newAnimal: Animal) => {
+        for (const [key, value] of Object.entries(oldAnimal)) {
+            if (!(key in newAnimal) || value !== newAnimal[key as keyof Animal]) {
+                return true
+            }
+        }
+        return false
+    }
+
+    getAvailableAnimals = async () => {
         const { docs } = await this.db.collection(Collections.Animals)
             .where('available', '==', true)
-            .select('url')
             .get()
+        return docs.map(doc => ({
+            ref: doc.ref,
+            animal: doc.data() as Animal
+        }))
+    }
+
+    syncAnimals = async (animals: Animal[]) => {
+        const availableAnimalDocs = await this.getAvailableAnimals()
         const existingIndexes = new Set<number>()
-        for (const doc of docs) {
-            const index = animals.findIndex(({ url }) => url === doc.data().url)
+        await Promise.all(availableAnimalDocs.map(async ({ ref, animal }) => {
+            const index = animals.findIndex(({ url }) => url === animal.url)
             if (index === -1) {
-                doc.ref.update({
+                await ref.update({
                     'available': false
                 })
             } else {
+                if (this.isAnimalDiff(animal, animals[index])) {
+                    await ref.update(animals[index])
+                }
                 existingIndexes.add(index)
             }
-        }
+        }))
         const newAnimalIndexes = []
+        const additions: Promise<DocumentReference<DocumentData, DocumentData>>[] = []
         for (let i = 0; i < animals.length; i++) {
             if (existingIndexes.has(i)) continue
             newAnimalIndexes.push(i)
-            this.db.collection(Collections.Animals).add({
+            additions.push(this.db.collection(Collections.Animals).add({
                 ...animals[i],
                 available: true
-            })
+            }))
         }
-        return { newAnimalIndexes, removedAnimalsCount: docs.length - existingIndexes.size }
+        await Promise.all(additions)
+        return { newAnimalIndexes, removedAnimalsCount: availableAnimalDocs.length - existingIndexes.size }
     }
 }
 

@@ -22,7 +22,7 @@ class Email {
     }
 
     async sendSubscribeEmail(customerName: string, customerEmail: string, animalTypeSubscriptions: AnimalType[], unsubscribeLink: string) {
-        return this.sendEmail(customerName, customerEmail, 'Subscribed to SPCA Montreal notifications', getSignupEmail(customerName, animalTypeSubscriptions, unsubscribeLink), `Welcome! You can unsubscribe here: ${unsubscribeLink}`)
+        return this.sendEmail(customerName, customerEmail, 'Subscribed to animal adoption updates!', getSignupEmail(customerName, animalTypeSubscriptions, unsubscribeLink), `Welcome! You can unsubscribe here: ${unsubscribeLink}`)
     }
 
     async sendNotifyEmail(customerName: string, customerEmail: string, animals: Animal[], unsubscribeLink: string) {
