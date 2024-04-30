@@ -103,7 +103,6 @@ const sendNotifications = async (animals: Animal[]) => {
 
 export const handleSubscribe = async (req: Request, res: Response) => {
     const { body } = req
-    debugger
     const validationResult = userSchema.validate(body)
     if (validationResult.error) {
         res.status(422).send()
@@ -112,7 +111,9 @@ export const handleSubscribe = async (req: Request, res: Response) => {
     const user = validationResult.value as User
     const userId = await firebase.subscribeUser(user)
     await email.sendSubscribeEmail(user.name, user.email, user.animalTypeSubscriptions, getUnsubscribeLink(userId))
-    res.send({})
+    res.send({
+        success: true
+    })
 }
 
 export const handleUnsubscribe = async (req: Request, res: Response) => {
