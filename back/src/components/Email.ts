@@ -3,7 +3,7 @@ import { MAILJET_API_KEY, MAILJET_SECRET_KEY } from '../../keys/mailjet'
 import getSignupEmail from '../assets/signup_email/signup'
 import getNotificationHtml from '../assets/notifications_email/notifications'
 import getNotificationRowHtml from '../assets/notifications_email/notificationRow'
-import { Animal, AnimalType } from '../app'
+import { Animal, AnimalType } from '../../../shared/types'
 
 class Email {
     static instance: Email

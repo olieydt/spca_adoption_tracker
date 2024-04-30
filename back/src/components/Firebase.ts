@@ -4,7 +4,7 @@ import { DocumentData, DocumentReference, FieldPath, Query } from 'firebase-admi
 import { getAuth, Auth, UserRecord } from "firebase-admin/auth"
 import { Firestore, getFirestore } from "firebase-admin/firestore"
 import serviceAccount from '../../keys/spca-adoption-notify-firebase-adminsdk-n3mam-d4d9f2a1f8.json'
-import { Animal, User } from 'app'
+import { Animal, AnimalType, User } from '../../../shared/types'
 import { generateRandomStr } from '../constants'
 
 //https://firebase.google.com/docs/auth/admin/errors

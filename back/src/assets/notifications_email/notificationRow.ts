@@ -1,4 +1,4 @@
-import { Animal, AnimalType } from "../../app"
+import { Animal } from "../../../../shared/types"
 
 export default (animal: Animal) => `
 <table align="center" border="0" cellpadding="0" cellspacing="0" class="row row-5"

@@ -1,46 +1,16 @@
-import { FRONTEND_URL, sleep } from './constants'
 import fetch, { METHODS } from './components/FetchWrapper'
 import { parse } from 'node-html-parser'
 import firebase from './components/Firebase'
+import crypto from 'crypto'
 import email from './components/Email'
 import { Request, Response } from '@google-cloud/functions-framework'
 import Joi from 'joi'
+import { AUTH_TOKEN } from '../keys/scrape'
+import { ANIMAL_TYPE_SUBSCRIPTIONS_MAX, NAME_MAX_LENGTH, NAME_MIN_LENGTH, sleep, FRONTEND_HOST } from '../../shared/constants'
+import { AgeType, Animal, AnimalType, SEX, User } from '../../shared/types'
 
 const BASIC_OSX_USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36'
 const SCRAPE_PAUSE_MS = 5000
-
-enum SEX {
-    Male = 'male',
-    Female = 'female'
-}
-
-export enum AnimalType {
-    Dog = 'dog',
-    Cat = 'cat'
-}
-
-const unsubscribeSchema = Joi.object({
-    id: Joi.string().length(20).required()
-})
-
-const userSchema = Joi.object({
-    name: Joi.string().required().min(3).max(100),
-    email: Joi.string().email().required(),
-    animalTypeSubscriptions: Joi.array<AnimalType>().max(2).unique().required()
-})
-
-export type User = {
-    name: string
-    email: string
-    animalTypeSubscriptions: AnimalType[]
-}
-
-enum AgeType {
-    Baby = 'baby',
-    Young = 'young',
-    Adult = 'adult',
-    Old = 'old'
-}
 
 const AgeTypeRecord: Record<string, AgeType> = {
     'Âgé': AgeType.Old,
@@ -49,14 +19,16 @@ const AgeTypeRecord: Record<string, AgeType> = {
     'Bébé': AgeType.Baby
 }
 
-export type Animal = {
-    type: AnimalType
-    name: string
-    url: string
-    ageType: AgeType
-    sex: SEX,
-    imageUrl: string
-}
+const unsubscribeSchema = Joi.object({
+    id: Joi.string().length(20).required()
+})
+
+const userSchema = Joi.object({
+    name: Joi.string().required().min(NAME_MIN_LENGTH).max(NAME_MAX_LENGTH),
+    email: Joi.string().email().required(),
+    animalTypeSubscriptions: Joi.array<AnimalType>().max(ANIMAL_TYPE_SUBSCRIPTIONS_MAX).unique().required()
+})
+
 
 const getSpcaPageUrl = (animalType: AnimalType, pageNumber: number) => {
     return `https://www.spca.com/adoption/${animalType === AnimalType.Dog ? 'chiens' : 'chats'}-en-adoption/page/${pageNumber}`
@@ -114,7 +86,7 @@ const getAllAnimals = async () => {
     return animals
 }
 
-const getUnsubscribeLink = (userId: string) => `${FRONTEND_URL}unsubscribe?id=${userId}`
+const getUnsubscribeLink = (userId: string) => `${FRONTEND_HOST}unsubscribe?id=${userId}`
 
 const sendNotifications = async (animals: Animal[]) => {
     const subscribedUsers = await firebase.getSubscribedUsers()
@@ -159,7 +131,11 @@ export const handleUnsubscribe = async (req: Request, res: Response) => {
     }
 }
 
-export const handleScrapeJob = async (res: Response) => {
+export const handleScrapeJob = async (req: Request, res: Response) => {
+    const token = req.header('X-AUTH-TOKEN')
+    if (!token || !crypto.timingSafeEqual(Buffer.from(token), Buffer.from(AUTH_TOKEN))) {
+        throw 401
+    }
     console.log('starting to sync animals')
     const animals = await getAllAnimals()
     const { newAnimalIndexes, removedAnimalsCount } = await firebase.syncAnimals(animals)

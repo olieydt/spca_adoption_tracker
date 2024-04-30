@@ -3,7 +3,8 @@
         "files": true
     },
     "include": [
-        "src"
+        "src",
+        "../shared"
     ],
     //"exclude": ["node_modules", ".vscode", "dist"],
     "compilerOptions": {
