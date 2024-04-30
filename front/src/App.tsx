@@ -9,10 +9,10 @@ import Button from '@mui/material/Button'
 import Typography from '@mui/material/Typography'
 import Modal from '@mui/material/Modal'
 import theme from "./theme"
-import logo from './assets/logo.png'
-import dog from './assets/dog_hold.png'
-import linkedin from './assets/linkedin.png'
-import email from './assets/email.png'
+import logo from './images/logo.png'
+import dog from './images/dog_hold.png'
+import linkedin from './images/linkedin.png'
+import email from './images/email.png'
 import Api, { METHODS } from "./Api"
 import { NAME_MAX_LENGTH, NAME_MIN_LENGTH, URL_PATHS } from "../../shared/constants"
 import { AnimalType, User } from '../../shared/types'

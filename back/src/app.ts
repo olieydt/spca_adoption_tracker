@@ -6,7 +6,7 @@ import email from './components/Email'
 import { Request, Response } from '@google-cloud/functions-framework'
 import Joi from 'joi'
 import { AUTH_TOKEN } from '../keys/scrape'
-import { ANIMAL_TYPE_SUBSCRIPTIONS_MAX, NAME_MAX_LENGTH, NAME_MIN_LENGTH, sleep, FRONTEND_HOST } from '../../shared/constants'
+import { ANIMAL_TYPE_SUBSCRIPTIONS_MAX, NAME_MAX_LENGTH, NAME_MIN_LENGTH, sleep, FRONTEND_HOST, SERVER_HOST } from '../../shared/constants'
 import { AgeType, Animal, AnimalType, SEX, User } from '../../shared/types'
 
 const BASIC_OSX_USER_AGENT = 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_15_7) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/123.0.0.0 Safari/537.36'
@@ -86,7 +86,7 @@ const getAllAnimals = async () => {
     return animals
 }
 
-const getUnsubscribeLink = (userId: string) => `${FRONTEND_HOST}/unsubscribe?id=${userId}`
+const getUnsubscribeLink = (userId: string) => `${SERVER_HOST}/unsubscribe?id=${userId}`
 
 const sendNotifications = async (animals: Animal[]) => {
     const subscribedUsers = await firebase.getSubscribedUsers()

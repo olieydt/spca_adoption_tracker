@@ -3,11 +3,11 @@ export enum URL_PATHS {
     Unsubscribe = 'unsubscribe'
 }
 
-//export const FRONTEND_HOST = 'https://spca-adoption-notify.web.app/'
-export const FRONTEND_HOST = 'http://localhost:5173'
+export const FRONTEND_HOST = 'https://spca-adoption-notify.web.app'
+//export const FRONTEND_HOST = 'http://localhost:5173'
 
-//export const SERVER_HOST = 'https://us-central1-spca-adoption-notify.cloudfunctions.net/spca-scraper/'
-export const SERVER_HOST = 'http://localhost:8080'
+export const SERVER_HOST = 'https://us-central1-spca-adoption-notify.cloudfunctions.net/spca-scraper'
+//export const SERVER_HOST = 'http://localhost:8080'
 
 export const sleep = (time: number) => {
     return new Promise(resolve => setTimeout(resolve, time))
