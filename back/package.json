@@ -28,6 +28,7 @@
         "cors": "^2.8.5",
         "eslint": "^8.57.0",
         "firebase-admin": "^12.1.0",
+        "ioredis": "^5.4.1",
         "joi": "^17.13.0",
         "node-fetch": "^2.7.0",
         "node-html-parser": "^6.1.13",

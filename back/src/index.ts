@@ -3,6 +3,7 @@ import { generateRandomStr, SERVER_URL_PATHS } from './constants'
 import { AsyncLocalStorage } from 'node:async_hooks'
 import * as app from './app'
 import { FRONTEND_HOST, URL_PATHS } from '../../shared/constants'
+import rateLimiter from './components/RateLimiter'
 
 
 const asyncLocalStorage = new AsyncLocalStorage()
@@ -45,6 +46,10 @@ http('entry', async (req, res) => {
     const reqId = req.header('trace-id') || generateRandomStr().slice(10)
     asyncLocalStorage.run(reqId, async () => {
         try {
+            if (await rateLimiter.isLimited(req.ip)) {
+                res.status(429).end()
+                return
+            }
             const shouldHandle = handleCors(req, res)
             if (!shouldHandle) {
                 return
