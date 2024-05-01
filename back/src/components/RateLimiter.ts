@@ -3,6 +3,7 @@ import redis from './Redis'
 const MAX_REQUEST_PER_HOUR = 20
 const WINDOW = 3600
 
+// thank you https://redis.io/learn/develop/dotnet/aspnetcore/rate-limiting/sliding-window
 export const LUA = `
 local current_time = redis.call('TIME')
 local trim_time = tonumber(current_time[1]) - ARGV[1]
