@@ -90,8 +90,12 @@ const getUnsubscribeLink = (userId: string) => `${SERVER_HOST}/unsubscribe?id=${
 
 const sendNotifications = async (animals: Animal[]) => {
     const subscribedUsers = await firebase.getSubscribedUsers()
-    const results = await Promise.allSettled(subscribedUsers.map(({ docId, user }) => {
-        return email.sendNotifyEmail(user.name, user.email, animals.filter(({ type }) => user.animalTypeSubscriptions.includes(type)), getUnsubscribeLink(docId))
+    const results = await Promise.allSettled(subscribedUsers.map(async ({ docId, user }) => {
+        const filteredAnimals = animals.filter(({ type }) => user.animalTypeSubscriptions.includes(type))
+        if (filteredAnimals.length < 1) {
+            return
+        }
+        return email.sendNotifyEmail(user.name, user.email, filteredAnimals, getUnsubscribeLink(docId))
     }))
     results.forEach((result, i) => {
         const { status } = result
