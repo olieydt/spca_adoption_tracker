@@ -124,7 +124,7 @@ function App() {
               <span>&copy; All Rights Reserved By FCB</span>
             </div>
             <div>
-              <span> <span className={classes.mobileHide}>-</span> For inquiries
+              <span><span className={classes.mobileHide}>&nbsp;-&nbsp;</span>For inquiries
                 <a href="mailto:olivier.eydt@gmail.com"><img className={classes.footerImg} width="35" src={email} alt="email" /></a>
                 -
                 <a href="https://www.linkedin.com/in/oli-stalk-me/"><img className={classes.footerImg} width="35" src={linkedin} alt="linkedin" /></a>
@@ -304,13 +304,12 @@ const useStyles = tss
       alignItems: 'center',
       justifyContent: 'center',
       backgroundColor: '#E8D8B3',
-      height: '100%',
-      maxHeight: '100px',
+      minHeight: '80px',
+      height: '80px',
+      maxHeight: '80px',
       textAlign: 'center',
       [theme.breakpoints.down("md")]: {
-        flexDirection: 'column',
-        paddingTop: '10px',
-        paddingBottom: '10px'
+        flexDirection: 'column'
       }
     },
     footerImg: {
