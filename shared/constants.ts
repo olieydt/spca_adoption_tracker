@@ -3,7 +3,7 @@ export enum URL_PATHS {
     Unsubscribe = 'unsubscribe'
 }
 
-export const FRONTEND_HOST = 'https://spca-adoption-notify.web.app'
+export const FRONTEND_HOST = 'https://findyourcompanion.ca'
 //export const FRONTEND_HOST = 'http://localhost:5173'
 
 export const SERVER_HOST = 'https://us-central1-spca-adoption-notify.cloudfunctions.net/spca-scraper'

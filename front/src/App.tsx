@@ -119,13 +119,17 @@ function App() {
               <Button onClick={handleSubmit} className={`${classes.textFont} ${classes.formSubmit}`} variant="outlined" disabled={isInvalidInput}>Subscribe</Button>
             </div>
           </div>
-          <footer className={classes.footerContainer}>
-            <p className={classes.textFont}>
-              &copy; All Rights Reserved By FCB - For inquiries
-              <a href="mailto:olivier.eydt@gmail.com"><img className={classes.footerImg} width="35" src={email} alt="email" /></a>
-              -
-              <a href="https://www.linkedin.com/in/oli-stalk-me/"><img className={classes.footerImg} width="35" src={linkedin} alt="linkedin" /></a>
-            </p>
+          <footer className={`${classes.footerContainer} ${classes.textFont}`}>
+            <div>
+              <span>&copy; All Rights Reserved By FCB</span>
+            </div>
+            <div>
+              <span> <span className={classes.mobileHide}>-</span> For inquiries
+                <a href="mailto:olivier.eydt@gmail.com"><img className={classes.footerImg} width="35" src={email} alt="email" /></a>
+                -
+                <a href="https://www.linkedin.com/in/oli-stalk-me/"><img className={classes.footerImg} width="35" src={linkedin} alt="linkedin" /></a>
+              </span>
+            </div>
           </footer>
           <Modal
             open={modalOpen}
@@ -218,7 +222,10 @@ const useStyles = tss
     rootContainer: {
       display: 'flex',
       flexDirection: 'column',
-      height: '100vh'
+      height: '100vh',
+      [theme.breakpoints.down("md")]: {
+        height: '100%'
+      }
     },
     header: {
       maxHeight: '150px',
@@ -264,6 +271,7 @@ const useStyles = tss
       fontSize: '3em',
     },
     textContainer: {
+      textAlign: 'justify',
       textWrap: 'wrap',
       [theme.breakpoints.down("md")]: {
         marginLeft: '20px'
@@ -292,16 +300,28 @@ const useStyles = tss
     },
     footerContainer: {
       display: 'flex',
+      flexDirection: 'row',
       alignItems: 'center',
       justifyContent: 'center',
       backgroundColor: '#E8D8B3',
       height: '100%',
-      maxHeight: '100px'
+      maxHeight: '100px',
+      textAlign: 'center',
+      [theme.breakpoints.down("md")]: {
+        flexDirection: 'column',
+        paddingTop: '10px',
+        paddingBottom: '10px'
+      }
     },
     footerImg: {
       verticalAlign: 'middle',
       marginLeft: '5px',
       marginRight: '5px'
+    },
+    mobileHide: {
+      [theme.breakpoints.down("md")]: {
+        display: 'none'
+      }
     }
   }))
 

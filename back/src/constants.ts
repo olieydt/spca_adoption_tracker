@@ -1,7 +1,4 @@
 import crypto from 'crypto'
-export const ENDPOINTS = {
-    PORTAL_HOST: 'https://localhost:8100/'
-}
 
 export const IS_PROD = () => {
     return process.env.IS_PROD === '1'
