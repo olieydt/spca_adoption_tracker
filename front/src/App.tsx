@@ -1,8 +1,10 @@
 import { tss } from "tss-react/mui"
-import { useState, useCallback, BaseSyntheticEvent, ChangeEvent } from 'react'
+import { useState, useCallback, BaseSyntheticEvent, ChangeEvent, forwardRef, ReactNode } from 'react'
 import { ThemeProvider } from "@mui/material/styles"
 import TextField from '@mui/material/TextField'
 import FormControlLabel from '@mui/material/FormControlLabel'
+import CircularProgress from '@mui/material/CircularProgress'
+import type { DialogProps } from "@mui/material"
 import Checkbox from '@mui/material/Checkbox'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -19,10 +21,32 @@ import { AnimalType, User } from '../../shared/types'
 
 const basicEmailValidator = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 
+const InnerModal = forwardRef<ReactNode, { isLoading: boolean, modalMessage: string, modalTitle: string }>(function (props, ref) {
+  const { isLoading, modalMessage, modalTitle } = props
+  const { classes } = useStyles()
+  if (isLoading) {
+    return (
+      <Box className={classes.loadingContainer}>
+        <CircularProgress size={100} />
+      </Box>
+    )
+  }
+  return (
+    <Box className={classes.modalMessageContainer}>
+      <Typography className={`${classes.modalTitle} ${classes.textFont}`} variant="h6" component="h2">
+        {modalTitle}
+      </Typography>
+      <Typography className={`${classes.modalMessage} ${classes.textFont}`}>
+        {modalMessage}
+      </Typography>
+    </Box>
+  )
+})
+
 function App() {
   const { classes } = useStyles()
   const [modalOpen, setModalOpen] = useState(false)
-  const handleCloseModal = () => setModalOpen(false)
+  const [isLoading, setIsLoading] = useState(false)
   const [modalTitle, setModalTitle] = useState('')
   const [modalMessage, setModalMessage] = useState('')
   const [dogChecked, setDogChecked] = useState(false)
@@ -31,6 +55,12 @@ function App() {
   const [emailFieldHelper, setEmailFieldHelper] = useState('')
   const [nameValue, setNameValue] = useState('')
   const [emailValue, setEmailValue] = useState('')
+  const handleCloseModal: DialogProps["onClose"] = useCallback((event: string, reason: string) => {
+    if (isLoading && reason && reason === "backdropClick") {
+      return
+    }
+    setModalOpen(false)
+  }, [isLoading])
   const handleDogChange = useCallback((event: ChangeEvent<HTMLInputElement>) => {
     setDogChecked(event.target.checked)
   }, [])
@@ -55,7 +85,18 @@ function App() {
     }
     setEmailValue(value)
   }, [])
+  const showLoading = useCallback(() => {
+    setIsLoading(true)
+    setModalOpen(true)
+  }, [])
+  const clearUserSelection = useCallback(() => {
+    setNameValue('')
+    setEmailValue('')
+    setDogChecked(false)
+    setCatChecked(false)
+  }, [])
   const handleSubmit = useCallback(async () => {
+    showLoading()
     const animalTypeSubscriptions = [dogChecked, catChecked].reduce((acc, curr, i) => {
       if (!curr) return acc
       if (i === 0) acc.push(AnimalType.Dog)
@@ -69,10 +110,13 @@ function App() {
         animalTypeSubscriptions
       }
     }).then(() => {
+      setIsLoading(false)
       setModalTitle('Success!')
       setModalMessage('You have successfully subscribed! Check your mail box for confirmation.')
       setModalOpen(true)
+      clearUserSelection()
     }).catch((error: Error) => {
+      setIsLoading(false)
       setModalTitle('Error!')
       setModalMessage('There was a problem. Check back later or try again.')
       setModalOpen(true)
@@ -132,19 +176,13 @@ function App() {
             </div>
           </footer>
           <Modal
+            disableEscapeKeyDown={true}
             open={modalOpen}
             onClose={handleCloseModal}
             aria-labelledby="modal-modal-title"
             aria-describedby="modal-modal-description"
           >
-            <Box className={classes.modalContainer}>
-              <Typography className={`${classes.modalTitle} ${classes.textFont}`} variant="h6" component="h2">
-                {modalTitle}
-              </Typography>
-              <Typography className={`${classes.modalMessage} ${classes.textFont}`}>
-                {modalMessage}
-              </Typography>
-            </Box>
+            <InnerModal isLoading={isLoading} modalTitle={modalTitle} modalMessage={modalMessage} />
           </Modal>
         </div>
       </ThemeProvider>
@@ -162,7 +200,13 @@ const useStyles = tss
       fontSize: '1.2em',
       marginLeft: '10px'
     },
-    modalContainer: {
+    loadingContainer: {
+      position: 'absolute',
+      top: '50%',
+      left: '50%',
+      transform: 'translate(-50%, -50%)',
+    },
+    modalMessageContainer: {
       position: 'absolute',
       top: '50%',
       left: '50%',
