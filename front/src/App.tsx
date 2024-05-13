@@ -21,7 +21,7 @@ import { AnimalType, User } from '../../shared/types'
 
 const basicEmailValidator = (email: string) => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)
 
-const InnerModal = forwardRef<ReactNode, { isLoading: boolean, modalMessage: string, modalTitle: string }>(function (props, ref) {
+const InnerModal = forwardRef<ReactNode, { isLoading: boolean, modalMessage: string, modalTitle: string }>(function (props, _ref) {
   const { isLoading, modalMessage, modalTitle } = props
   const { classes } = useStyles()
   if (isLoading) {
@@ -55,7 +55,7 @@ function App() {
   const [emailFieldHelper, setEmailFieldHelper] = useState('')
   const [nameValue, setNameValue] = useState('')
   const [emailValue, setEmailValue] = useState('')
-  const handleCloseModal: DialogProps["onClose"] = useCallback((event: string, reason: string) => {
+  const handleCloseModal: DialogProps["onClose"] = useCallback((_event: string, reason: string) => {
     if (isLoading && reason && reason === "backdropClick") {
       return
     }
