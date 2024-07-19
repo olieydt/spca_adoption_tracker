@@ -113,7 +113,7 @@ export const handleSubscribe = async (req: Request, res: Response) => {
         return
     }
     const user = validationResult.value as User
-    user.email = user.email.toLowerCase()
+    user.email = user.email.trim().toLowerCase()
     const userId = await firebase.subscribeUser(user)
     await email.sendSubscribeEmail(user.name, user.email, user.animalTypeSubscriptions, getUnsubscribeLink(userId))
     res.send({

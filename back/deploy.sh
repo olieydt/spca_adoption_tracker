@@ -7,5 +7,5 @@ gcloud functions deploy spca-scraper \
 --allow-unauthenticated \
 --service-account spca-adoption@spca-adoption-notify.iam.gserviceaccount.com \
 --timeout=540 \
---memory=256MB \
+--memory=512MB \
 --docker-registry=artifact-registry
